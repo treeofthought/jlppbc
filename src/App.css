@@ -1,0 +1,45 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid black;
+  background: #d9d9d9;
+  width: 580px;
+  max-width: 100%;
+  row-gap: 0.5em;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+.headerWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 25px;
+  padding-right: 5px;
+  padding-left: 5px;
+  row-gap: 1.5em;
+}
+
+table {
+  layout: fixed;
+}
+
+td {
+  max-width: 10%;
+}
+
+h1, h2, h3, h4, h5 {
+  margin: 0px;
+}
+
+table {
+  width: 100%;
+}
