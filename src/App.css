@@ -12,6 +12,20 @@
   border-radius: 10px;
 }
 
+.flexRow {
+  display: flex;
+  border: 1px solid black;
+  justify-content: space-between;
+}
+
+.flexCell {
+  border: 1px solid black;
+}
+
+.flexTable {
+  display: flex;
+}
+
 .headerWrap {
   display: flex;
   flex-direction: column;
