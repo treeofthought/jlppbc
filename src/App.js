@@ -1,47 +1,26 @@
-import logo from './logo.svg';
+import { Routes, Route } from "react-router-dom";
 import './App.css';
+import All from './all';
 import Best from './best';
 import Worst from './worst';
 
-function tableCol(header, data) {
-  return(
-    <div className="flexCol">
-      <div className="flexCell headerCell">{header}</div>
-      {data.map(cell =>
-        <div className="flexCell">{cell}</div>
-      )}
-    </div>
-  )
-}
-
-function BestTable(props) {
-  const { json } = props
-  console.log(json)
+function JSONTableRows({ json }) {
+  const headers = Object.keys(json[0])
   return(
     <table>
       <thead>
         <tr>
-          <th>Title</th>
-          <th>Author</th>
-          <th>Avg</th>
-          <th>St. Dev</th>
-          <th>C</th>
-          <th>J</th>
-          <th>P</th>
-          <th>S</th>
+          {headers.map((header, i) => 
+              <th key={i}>{header}</th>
+          )}
         </tr>
       </thead>
       <tbody>
-        {json.map(row =>
-          <tr>
-            <td>{row.Title}</td>
-            <td>{row.Author}</td>
-            <td>{row.Avg}</td>
-            <td>{row[`Std.Dev`]}</td>
-            <td>{row.C}</td>
-            <td>{row.J}</td>
-            <td>{row.P}</td>
-            <td>{row.S}</td>
+        {json.map((row, rowI) =>
+          <tr key={rowI}>
+            {headers.map((header, colI) => 
+              <td key={colI}>{row[header]}</td>
+            )}
           </tr>
         )}
       </tbody>
@@ -49,19 +28,10 @@ function BestTable(props) {
   )
 }
 
-function TableFromJSON(props) {
-  const { json } = props
-  const headers = Object.keys(json)
-  const columns = headers.map(header => 
-    tableCol(header, json[header])
-  )
-  return <div className="flexTable">{columns}</div>
-}
-
-function App() {
+function Home() {
 
   return (
-    <div className="page">
+    <>
       <div className="headerWrap">
         <h1>JLPPBC</h1>
         <h3>James Long Perfection Personified Book Club</h3>
@@ -77,14 +47,37 @@ function App() {
         <h3>Monday, February 20th at 6/9</h3>
       </div>
       <div className="card">
-        <h2>Best and Worst</h2>
-        <h3>Top 5 Books with 2+ Ratings</h3>
-        <BestTable json={Best} />
-        <h3>Bottom 5 Books with 2+ Ratings</h3>
-        <BestTable json={Worst} />
+        <h2><a href="/ratings">Table of Books</a></h2>
+        <h3>Best and Worst</h3>
+        <h4>Top 5 Books with 2+ Ratings</h4>
+        <JSONTableRows json={Best} />
+        <h4>Bottom 5 Books with 2+ Ratings</h4>
+        <JSONTableRows json={Worst} />
+        <br />
       </div>
-    </div>
+    </>
   );
+}
+
+function Ratings() {
+  return(
+    <div className="card">
+      <JSONTableRows json={All} />
+      
+      <a href="/">Home</a>
+    </div>
+  )
+}
+
+function App() {
+  return (
+    <div className="page">
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/ratings" element={<Ratings />} />
+      </Routes>
+    </div>
+  )
 }
 
 export default App;
