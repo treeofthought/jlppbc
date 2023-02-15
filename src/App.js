@@ -25,6 +25,7 @@ function BestTable(props) {
           <th>Author</th>
           <th>Avg</th>
           <th>St. Dev</th>
+          <th>C</th>
           <th>J</th>
           <th>P</th>
           <th>S</th>
@@ -37,6 +38,7 @@ function BestTable(props) {
             <td>{row.Author}</td>
             <td>{row.Avg}</td>
             <td>{row[`Std.Dev`]}</td>
+            <td>{row.C}</td>
             <td>{row.J}</td>
             <td>{row.P}</td>
             <td>{row.S}</td>
