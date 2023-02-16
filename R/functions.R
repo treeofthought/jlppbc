@@ -1,6 +1,14 @@
 library('data.table')
 
-LoadRatings <- function(groups=c('JLPPBC')) {
+SlugBooks <- function() {
+  books <- fread('data/books.csv')
+  books[, slug := tolower(title)]
+  books[, slug := gsub(' ', '-', slug)]
+  books[, slug := gsub('[^0-9a-zA-Z\\-]', '', slug)]
+  write.csv(books, 'data/books.csv', row.names=F)
+}
+
+StackRatings <- function() {
   books <- fread('data/books.csv')
   stu <- fread('data/ratings/stu.csv')[!is.na(Rating)]
   stu[, User := 'S']
@@ -16,10 +24,18 @@ LoadRatings <- function(groups=c('JLPPBC')) {
   
   dan <- fread('data/ratings/dan.csv')[!is.na(Rating)]
   dan[, User := 'D']
-
+  
   
   dat <- rbind(stu, james, pierce, chris, dan)
-  dat <- merge(dat, books, by=c('Title', 'Author'))
+  dat <- dat[, .(title=Title, author=Author, rating=Rating, user=User)]
+  dat <- merge(dat, books, by=c('title', 'author'))
+  write.csv(dat, 'data/ratings.csv', row.names=F)
+}
+
+LoadRatings <- function(groups=c('JLPPBC')) {
+  dat <- fread('data/rankings.csv')
+  dat <- dat[, .(Title=title, Author=author, Rating=Rating, User=user,
+                 Group=group)]
   return(dat[Group %in% groups])
 }
 
