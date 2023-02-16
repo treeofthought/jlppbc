@@ -25,16 +25,19 @@ StackRatings <- function() {
   dan <- fread('data/ratings/dan.csv')[!is.na(Rating)]
   dan[, User := 'D']
   
+  sam <- fread('data/ratings/sam.csv')[!is.na(Rating)]
+  sam[, User := 'G']
   
-  dat <- rbind(stu, james, pierce, chris, dan)
+  
+  dat <- rbind(stu, james, pierce, chris, dan, sam)
   dat <- dat[, .(title=Title, author=Author, rating=Rating, user=User)]
   dat <- merge(dat, books, by=c('title', 'author'))
   write.csv(dat, 'data/ratings.csv', row.names=F)
 }
 
 LoadRatings <- function(groups=c('JLPPBC')) {
-  dat <- fread('data/rankings.csv')
-  dat <- dat[, .(Title=title, Author=author, Rating=Rating, User=user,
+  dat <- fread('data/ratings.csv')
+  dat <- dat[, .(Title=title, Author=author, Rating=rating, User=user,
                  Group=group)]
   return(dat[Group %in% groups])
 }
@@ -53,7 +56,7 @@ ShapeRatingTable <- function(df) {
 }
 
 TrimRatingTable <- function(df) {
-  return(df[, .(Title, Author, Avg, C, D, J, P, S)])
+  return(df[, .(Title, Author, Avg, C, D, G, J, P, S)])
 }
 
 WriteTableJSON <- function(df, path) {
