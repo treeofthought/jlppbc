@@ -1,8 +1,11 @@
 library('jsonlite')
 library('ggplot2')
+library("PerformanceAnalytics")
 source('R/functions.R')
 
+StackRatings()
 dat <- LoadRatings()
+
 
 wide <- ShapeRatingTable(dat)
 
@@ -16,7 +19,7 @@ low <- low[order(Avg)]
 WriteTableJSON(low, 'src/worst.json')
 
 wide[, high.rank := frankv(Avg, order=-1, ties.method='min')]
-best <- TrimRatingTable(wide[hight.rank <= 5])
+best <- TrimRatingTable(wide[high.rank <= 5])
 best <- best[order(-Avg)]
 WriteTableJSON(best, 'src/best.json')
 
@@ -58,3 +61,11 @@ ggplot(dat, aes(x=Reader, y=Rating)) +
         legend.key.height = unit(0.1, 'cm'),
         legend.key.width = unit(1.5, 'cm'),
         panel.grid.minor = element_blank())
+
+
+wide[Avg < 5, .(Title, Avg, D)]
+
+
+wide.num <- wide[, .(C=as.numeric(C), D=as.numeric(D), J=as.numeric(J),
+                     P=as.numeric(P), S=as.numeric(S))]
+chart.Correlation(wide.num[, .(C, D, J, P, S)], histogram=TRUE, pch=19)

@@ -1,11 +1,35 @@
+import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import './App.css';
 import All from './all';
 import Best from './best';
 import Worst from './worst';
 
-function JSONTableRows({ json }) {
-  const headers = Object.keys(json[0])
+async function fetchTableData(target) {
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/${target}`)
+  const text = await response.text();
+  const json = JSON.parse(text);
+  return json
+}
+
+function JSONTableRows({ target }) {
+
+  const [json, setJSON] = useState([]);
+  const [headers, setHeaders] = useState([]);
+  const knownHeaders = ['Title', 'Author', 'Avg'];
+
+  useEffect(() => {
+    (async () => {
+      const json = await fetchTableData(target)
+      const rawHeaders = json[0] ? Object.keys(json[0]) : []
+      const users = rawHeaders.filter(function(x) {
+        return knownHeaders.indexOf(x) < 0;
+      });
+      setJSON(json);
+      setHeaders(knownHeaders.concat(users));
+    })()
+  }, [])
+
   return(
     <table>
       <thead>
@@ -19,7 +43,7 @@ function JSONTableRows({ json }) {
         {json.map((row, rowI) =>
           <tr key={rowI}>
             {headers.map((header, colI) => 
-              <td key={colI}>{row[header]}</td>
+              <td key={colI}>{row[header] || '--'}</td>
             )}
           </tr>
         )}
@@ -50,9 +74,9 @@ function Home() {
         <h2><a href="/ratings">Table of Books</a></h2>
         <h3>Best and Worst</h3>
         <h4>Top 5 Books with 2+ Ratings</h4>
-        <JSONTableRows json={Best} />
+        <JSONTableRows target='top-five' />
         <h4>Bottom 5 Books with 2+ Ratings</h4>
-        <JSONTableRows json={Worst} />
+        <JSONTableRows target='bottom-five' />
         <br />
       </div>
     </>
@@ -62,7 +86,7 @@ function Home() {
 function Ratings() {
   return(
     <div className="card">
-      <JSONTableRows json={All} />
+      <JSONTableRows target='ratings' />
       
       <a href="/">Home</a>
     </div>
