@@ -26,6 +26,16 @@
   display: flex;
 }
 
+.header{
+  display: flex;
+  flex-direction: row-reverse;
+  box-sizing: border-box;
+  justify-content: space-between;
+  width: 100%;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
 .headerWrap {
   display: flex;
   flex-direction: column;
@@ -40,6 +50,11 @@
   padding-right: 5px;
   padding-left: 5px;
   row-gap: 1.5em;
+}
+
+.signin {
+  display: flex;
+  flex-direction: column;
 }
 
 table {

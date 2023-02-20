@@ -1,56 +1,12 @@
 import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import Login from "./webpages/login.js";
+import UserRatings from "./webpages/user-ratings.js";
+import BookDetail from "./webpages/book-detail.js";
+import Header from "./components/header.js";
+import JSONTableRows from "./components/json-table-rows.js";
+import userService from './services/user-service.js';
 import './App.css';
-import All from './all';
-import Best from './best';
-import Worst from './worst';
-
-async function fetchTableData(target) {
-  const response = await fetch(`${process.env.REACT_APP_API_URL}/${target}`)
-  const text = await response.text();
-  const json = JSON.parse(text);
-  return json
-}
-
-function JSONTableRows({ target }) {
-
-  const [json, setJSON] = useState([]);
-  const [headers, setHeaders] = useState([]);
-  const knownHeaders = ['Title', 'Author', 'Avg'];
-
-  useEffect(() => {
-    (async () => {
-      const json = await fetchTableData(target)
-      const rawHeaders = json[0] ? Object.keys(json[0]) : []
-      const users = rawHeaders.filter(function(x) {
-        return knownHeaders.indexOf(x) < 0;
-      });
-      setJSON(json);
-      setHeaders(knownHeaders.concat(users));
-    })()
-  }, [])
-
-  return(
-    <table>
-      <thead>
-        <tr>
-          {headers.map((header, i) => 
-              <th key={i}>{header}</th>
-          )}
-        </tr>
-      </thead>
-      <tbody>
-        {json.map((row, rowI) =>
-          <tr key={rowI}>
-            {headers.map((header, colI) => 
-              <td key={colI}>{row[header] || '--'}</td>
-            )}
-          </tr>
-        )}
-      </tbody>
-    </table>
-  )
-}
 
 function Home() {
 
@@ -76,7 +32,7 @@ function Home() {
         <h4>Top 5 Books with 2+ Ratings</h4>
         <JSONTableRows target='top-five' />
         <h4>Bottom 5 Books with 2+ Ratings</h4>
-        <JSONTableRows target='bottom-five' />
+        <JSONTableRows target='bottom-five' includeAvg={true} />
         <br />
       </div>
     </>
@@ -86,8 +42,7 @@ function Home() {
 function Ratings() {
   return(
     <div className="card">
-      <JSONTableRows target='ratings' />
-      
+      <JSONTableRows target='ratings' includeAvg={true} />
       <a href="/">Home</a>
     </div>
   )
@@ -159,10 +114,14 @@ function Hyperion() {
 function App() {
   return (
     <div className="page">
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/ratings" element={<Ratings />} />
         <Route path="/hyperion" element={<Hyperion />} />
+        <Route path="/ratings/:name" element={<UserRatings />} />
+        <Route path="/books/:slug" element={<BookDetail />} />
       </Routes>
     </div>
   )
