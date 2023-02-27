@@ -6,7 +6,8 @@ async function login(email, password) {
     method: 'POST',
     headers: new Headers({
         'Authorization': 'Basic '+ btoa(input), 
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        mode: 'cors',
     })
   }
 
@@ -17,7 +18,7 @@ async function login(email, password) {
     const { token, name } = JSON.parse(text);
     sessionStorage.setItem('token', token)
     sessionStorage.setItem('name', name)
-    sessionStorage.setItem('loggedIn', true)
+    sessionStorage.setItem('isLoggedIn', true)
     return true
   } else {
     return false
@@ -25,13 +26,17 @@ async function login(email, password) {
 }
 
 function logout() {
-  sessionStorage.removeItem('loggedIn')
+  sessionStorage.removeItem('isLoggedIn')
   sessionStorage.removeItem('token')
   sessionStorage.removeItem('name')
 }
 
 function isLoggedIn() {
-  return sessionStorage.getItem('loggedIn') == 'true' ? true : false
+  return sessionStorage.getItem('isLoggedIn') == 'true' ? true : false
 }
 
-export default { login, logout, isLoggedIn };
+function getName() {
+  return sessionStorage.getItem('name')
+}
+
+export default { getName, login, logout, isLoggedIn };

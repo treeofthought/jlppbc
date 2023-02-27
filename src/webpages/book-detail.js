@@ -10,10 +10,28 @@ async function fetchTableData(target) {
 }
 
 function RatingForm() {
+
+  const [values, setValues] = useState({rating: ``});
+  const [error, setError] = useState();
+
+  const changeHandler = ({ target: { name, value } }) => {
+    const newState = { ...values, [name]: value };
+    setValues(newState);
+  };
+
+  const submitHandler = async (event) => {
+    event.preventDefault();
+    console.log(values)
+  }
+
+
   return(
-    <form>
-      <input />
+    <>
+    <form onSubmit={submitHandler} id="ratingForm">
+      <input id="rating" name="rating" value={values.rating} onChange={changeHandler}/>
     </form>
+    <button form="ratingForm">Rate this Book</button>
+    </>
   )
 }
 
@@ -41,7 +59,6 @@ function BookDetail() {
         )}
       </div>
       {isLoggedIn && <>
-          <button>Rate this Book</button>
           <RatingForm />
       </>}
       <a href="/">Home</a>

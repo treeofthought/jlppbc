@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import userService from '../services/user-service.js';
 import '../App.css';
 
-function Login() {
-
+function Login(props) {
+  const { login } = props;
   const [values, setValues] = useState({email: ``, password: ``});
   const [error, setError] = useState();
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ function Login() {
 
   const submitHandler = async (event) => {
     event.preventDefault();
-    const success = await userService.login(values.email, values.password)
+    const success = await login(values.email, values.password)
     if (!success) {
       setError('Invalid username or password. Please try again.')
     }

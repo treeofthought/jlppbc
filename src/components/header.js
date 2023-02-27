@@ -10,16 +10,11 @@ function LogoutButton(props) {
   return <a href="/login" {...props}>Log Out</a>
 }
 
-function Header() {
-  const logout = (event) => {
-    event.preventDefault();
-    userService.logout()
-    setIsLoggedIn(false)
-  }
-
-  const cta = userService.isLoggedIn() ? <LogoutButton onClick={logout}/> : <LoginButton />
-  const [isLoggedIn, setIsLoggedIn] = useState(userService.isLoggedIn())
-  const name = sessionStorage.getItem('name')
+function Header(props) {
+  const { logout } = props
+  const isLoggedIn = userService.isLoggedIn()
+  const cta = isLoggedIn ? <LogoutButton onClick={logout}/> : <LoginButton />
+  const name = userService.getName()
 
   return(
     <div className="header">
